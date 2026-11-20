@@ -5,7 +5,7 @@ Name: Elias Waich
 Section: CS230 - 7
 Dataset: NASA Fireballs (1988 to 2026), NASA/JPL Center for Near-Earth Object
          Studies (CNEOS), https://cneos.jpl.nasa.gov/fireballs/
-App URL: not published yet
+App URL: https://danpdbnqob6slqg6hvea29.streamlit.app/
 Description: An app for a teacher to explore where and when fireballs
              happened, how many were seen each year, and which were the
              biggest.
