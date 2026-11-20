@@ -76,6 +76,11 @@ def load_data(filename):
     return df
 
 
+def get_year_range(data):
+    # This function returns two values: the first year and the last year
+    return int(data["year"].min()), int(data["year"].max())
+
+
 # #[REUSE_FUNC] IDENTIFY & EXPLAIN
 # The AI wrote one function that styles a chart (title, axis labels, grid,
 # line color and width). Both charts call it, so the styling code is not
@@ -113,8 +118,15 @@ except FileNotFoundError:
     st.error(f"Could not find {DATA_FILE}. Put it in the same folder as app.py.")
     st.stop()
 
-min_year = int(df["year"].min())
-max_year = int(df["year"].max())
+min_year, max_year = get_year_range(df)
+
+# Sidebar: how many fireballs have a value for each ranking choice.
+# .items() gives each label with its (column, unit) pair, and the loop
+# goes through them one at a time.
+st.sidebar.header("About the data")
+st.sidebar.write(f"{len(df)} fireballs have a location.")
+for label, (col, unit) in RANK_OPTIONS.items():
+    st.sidebar.write(f"{label}: {df[col].notna().sum()} fireballs")
 
 
 # ---------------- Question 1 ----------------
@@ -153,7 +165,7 @@ else:
     map_data = result[["lat", "lon"]].copy()
     map_data["speed"] = result["speed"].round(1)
     map_data["date_text"] = result["date"].dt.strftime("%Y-%m-%d")
-    map_data["alt_text"] = result["alt"].astype(str).replace("nan", "unknown")
+    map_data["alt_text"] = result["alt"].apply(lambda a: "unknown" if pd.isna(a) else str(a))
     # Faster fireballs get bigger dots
     map_data["size"] = result["speed"] * 6000
 
